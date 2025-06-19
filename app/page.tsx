@@ -9,6 +9,7 @@ import React from "react";
 export default function Home() {
   const router = useRouter();
   const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
+  const [imgExtention, setImgExtension] = React.useState<string | null>(null);
   const allowedFileTypes = ["image/jpg", "image/png"];
   const props: UploadProps = {
     name: "file",
@@ -27,6 +28,8 @@ export default function Home() {
     },
     beforeUpload(file) {
       const isAllowedType = allowedFileTypes.includes(file.type);
+      console.log(file.type);
+      setImgExtension(file.type);
       if (!isAllowedType) {
         message.error(`${file.name} is not a valid file type.`);
       }
@@ -86,6 +89,9 @@ export default function Home() {
         <p className="ant-upload-hint">Maximum file size: 2MB</p>
       </Dragger>
 
+      {imgExtention && (
+        <div className="text-red-500 text-center">{` ${imgExtention}`}</div>
+      )}
       <Button
         onClick={() => {
           router.push("/preview");
