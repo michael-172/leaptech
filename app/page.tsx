@@ -75,7 +75,7 @@ export default function Home() {
         File uploader example
       </div>
 
-      <Dragger className="w-full" {...props}>
+      <Dragger className="w-[800px] !mx-auto max-w-full" {...props}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined size={20} />
         </p>
