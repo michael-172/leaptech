@@ -1,0 +1,5 @@
+in html create input to upload image files : jpg, png only,
+a preview button that shows the uploaded image on another page 
+make it drag and drop to the input 
+use css to  animate file uploaded 
+use javascript when image is previewed display the image without refreshing the page if not refresh the page
