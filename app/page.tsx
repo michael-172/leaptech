@@ -1,6 +1,6 @@
 "use client";
 import { InboxOutlined } from "@ant-design/icons";
-import { Button, message, Upload, UploadProps } from "antd";
+import { Button, message, notification, Upload, UploadProps } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,15 @@ export default function Home() {
       //check file size
       const file = e.dataTransfer.files[0];
       if (file.size > 2 * 1024 * 1024) {
-        message.error("File size exceeds 2MB limit.");
+        notification.error({
+          message: "File size exceeds limit",
+          description: `Maximum file size is 2MB. Your file size is ${(
+            file.size /
+            1024 /
+            1024
+          ).toFixed(2)}MB`,
+          duration: 3,
+        });
         return;
       }
     },
@@ -31,11 +39,23 @@ export default function Home() {
       console.log(file.type);
       setImgExtension(file.type);
       if (!isAllowedType) {
-        message.error(`${file.name} is not a valid file type.`);
+        notification.error({
+          message: "Invalid file type",
+          description: `Only .jpg and .png files are allowed, this file extention is ${file.type}`,
+          duration: 3,
+        });
       }
       // Check file size
       if (file.size > 2 * 1024 * 1024) {
-        message.error("File size exceeds 2MB limit.");
+        notification.error({
+          message: "File size exceeds limit",
+          description: `Maximum file size is 2MB. Your file size is ${(
+            file.size /
+            1024 /
+            1024
+          ).toFixed(2)}MB`,
+          duration: 3,
+        });
         return Upload.LIST_IGNORE;
       }
       return isAllowedType || Upload.LIST_IGNORE;
@@ -44,8 +64,11 @@ export default function Home() {
     },
     onChange(info) {
       if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-        // setUploadedFile(info.file.originFileObj as File);
+        notification.success({
+          message: "File uploaded successfully",
+          description: `${info.file.name} has been uploaded.`,
+          duration: 3,
+        });
 
         //convert the file to base64 and save it in local storage
         const reader = new FileReader();
@@ -70,38 +93,43 @@ export default function Home() {
   };
 
   return (
-    <div
-      className=" flex flex-col gap-10 justify-items-center h-fit items-start
-     p-8 pb-20  sm:p-20 font-[family-name:var(--font-geist-sans)]"
-    >
-      <div className="text-2xl  w-full flex items-center justify-center">
-        File uploader example
+    <div className="flex flex-col w-full">
+      {" "}
+      <div className="w-full h-[100px] py-6 bg-[#19335d]">
+        <div className=" px-4 sm:px-8 flex items-center justify-between">
+          <Image src={"/logo1.png"} width={100} height={55} alt="Leap Tech" />
+        </div>
       </div>
-
-      <Dragger className="w-[800px] !mx-auto max-w-full" {...props}>
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined size={20} />
-        </p>
-        <p className="ant-upload-text">
-          Click or drag file to this area to upload
-        </p>
-        <p className="ant-upload-hint">Allowed file types: .jpg, .png</p>
-        <p className="ant-upload-hint">Maximum file size: 2MB</p>
-      </Dragger>
-
-      {imgExtention && (
-        <div className="text-red-500 text-center">{` ${imgExtention}`}</div>
-      )}
-      <Button
-        onClick={() => {
-          router.push("/preview");
-        }}
-        disabled={!uploadedFile}
-        type="primary"
-        className="!w-60 !mx-auto"
+      <div
+        className=" flex flex-col gap-10 justify-items-center h-fit items-start
+     p-8 pb-20  sm:p-20 font-[family-name:var(--font-geist-sans)]"
       >
-        Preview
-      </Button>
+        <div className="text-2xl  w-full flex items-center justify-center">
+          File uploader
+        </div>
+
+        <Dragger className="w-[800px] !mx-auto max-w-full" {...props}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined size={20} />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p className="ant-upload-hint">Allowed file types: .jpg, .png</p>
+          <p className="ant-upload-hint">Maximum file size: 2MB</p>
+        </Dragger>
+
+        <Button
+          onClick={() => {
+            router.push("/preview");
+          }}
+          disabled={!uploadedFile}
+          type="primary"
+          className="!w-60 !mx-auto"
+        >
+          Preview
+        </Button>
+      </div>
     </div>
   );
 }
